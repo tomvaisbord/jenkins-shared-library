@@ -30,7 +30,7 @@ def call(Map config) {
             stage('Push to DockerHub') {
                 steps {
                     script {
-                        docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                        docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-api-token') {
                             dockerImage.push()
                         }
                     }
