@@ -1,11 +1,12 @@
 // vars/pushDocker.groovy
 def call(String imageName, String dockerCredentialsId) {
     echo "Pushing Docker Image ${imageName} to DockerHub..."
-    withCredentials([string(credentialsId: dockerCredentialsId, variable: 'DOCKER_HUB_API_TOKEN')]) {
+    withCredentials([usernamePassword(credentialsId: dockerCredentialsId, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
         sh """
-        echo "$DOCKER_HUB_API_TOKEN" | docker login -u "your-dockerhub-username" --password-stdin
-        docker tag ${imageName} your-dockerhub-username/${imageName}:latest
-        docker push your-dockerhub-username/${imageName}:latest
+            docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+            docker tag ${imageName} ${DOCKER_USERNAME}/${imageName}:latest
+            docker push ${DOCKER_USERNAME}/${imageName}:latest
+            docker logout
         """
     }
 }
